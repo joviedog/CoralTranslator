@@ -39,7 +39,8 @@ public class FunctionTranslate extends CoralBaseListener {
     @Override
     public void enterArray_access(CoralParser.Array_accessContext ctx){
         System.out.print("[");
-        System.out.println(ctx.expresion_aritmetica());
+        System.out.print(ctx.expresion_aritmetica().getText());
+        System.out.print("]");
     }
 
     // Traduccion del acceso al tamaño de un arreglo de la forma array.size
@@ -74,8 +75,29 @@ public class FunctionTranslate extends CoralBaseListener {
     public void enterAsgEntrada(CoralParser.AsgEntradaContext ctx){
         if (!ctx.entrada().getText().equals("Get next input") && !ctx.entrada().getText().equals("Getnextinput")){
             System.out.print(ctx.ASSIGN());
-            System.out.print(ctx.entrada().getText());
-            System.out.println(";");
+            String number = ctx.entrada().getText();
+            // Si es un entero o un float si se imprime
+            try
+            {
+                int isNumber = Integer.parseInt(number);
+                System.out.println(isNumber);
+            }
+            catch (NumberFormatException e)
+            {
+                try
+                {
+                    float isNumber = Float.parseFloat(number);
+                    System.out.println(isNumber);
+                }
+                catch (NumberFormatException er) {
+                    System.out.print("");
+
+                }
+
+            }
+            // System.out.print(ctx.entrada().getText());
+            // System.out.print(ctx.entrada().getText());
+            // System.out.println(";");
         }
         else{
             System.out.print(ctx.ASSIGN());
@@ -270,11 +292,11 @@ public class FunctionTranslate extends CoralBaseListener {
         System.out.println("Random r = new Random();");
         System.out.println("r.setSeed(" + randomSeed + ");");
     }
-    // Traduccion de las otras built in
+
+    // Traduccion de numeros (Incluye Builtins)
     @Override
     public void enterSqRoot(CoralParser.SqRootContext ctx){
         String sqrtNum = ctx.expresion_aritmetica().getText();
-        System.out.println(sqrtNum);
         System.out.println("Math.sqrt(" + sqrtNum + ");");
     }
 
@@ -286,6 +308,8 @@ public class FunctionTranslate extends CoralBaseListener {
 
     @Override
     public void enterRtp(CoralParser.RtpContext ctx){
+        // Esta expresion aritmetica hay que cambiarla. Puede ser un alias
+        // La idea es lograr que traduzca antes de cargar al output
         String a = ctx.expresion_aritmetica(0).getText();
         String b = ctx.expresion_aritmetica(1).getText();
         System.out.println("Math.pow(" + a + "," + b + ");");
@@ -298,5 +322,10 @@ public class FunctionTranslate extends CoralBaseListener {
         System.out.print("Math.floor(Math.random()*("+upperLimit+"-"+lowerLimit+"+1)+" + lowerLimit+ ");");
     }
 
+
+    @Override
+    public void enterExp_arit(CoralParser.Exp_aritContext ctx){
+        // System.out.println("XD");
+    }
 
 }

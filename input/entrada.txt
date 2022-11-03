@@ -1,4 +1,5 @@
 SeedRandomNumbers(3*2)
 x = SquareRoot(4)
+w = 5
 y = AbsoluteValue(-x)
 z = RaiseToPower(RandomNumber(x,y+5),unarreglo[5])
