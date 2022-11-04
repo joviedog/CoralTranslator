@@ -1,4 +1,4 @@
-// Generated from C:/Users/Juan/Documents/TraductorCoral/grammar\Coral.g4 by ANTLR 4.10.1
+// Generated from D:/Universidad/0Actual/Programming Languages/CoralTranslator/grammar\Coral.g4 by ANTLR 4.10.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**

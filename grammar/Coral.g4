@@ -87,8 +87,8 @@ expresion_aritmetica_precision: expresion_aritmetica;
 // Declaracion tipo de dato
 tipo_dato: 'float' | 'integer';
 
-es_arreglo: 'array' OPENING_PAR tamano_arreglo | /* epsilon */;
-tamano_arreglo: QUESTION_MARK CLOSING_PAR | INTEGER CLOSING_PAR;
+es_arreglo: 'array' OPENING_PAR tamano_arreglo CLOSING_PAR| /* epsilon */;
+tamano_arreglo: QUESTION_MARK | INTEGER;
 
 cuerpo_control: id_asg cond_bool6 |
     seedrn cond_bool6 |

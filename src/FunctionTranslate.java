@@ -10,6 +10,7 @@ public class FunctionTranslate extends CoralBaseListener {
     // Se declara un mapa para manejar los tipos de variables para el scanner
     Map<String, String> varTypeMap = new HashMap<String, String>();
     String varCheckType;
+    Boolean proceed = true;
     // Traduccion de la declaracion de una variable en el programa
     @Override
     public void enterVariable_declaration(CoralParser.Variable_declarationContext ctx){
@@ -25,8 +26,16 @@ public class FunctionTranslate extends CoralBaseListener {
             // Añadimos la variable al mapa de tipos
             varTypeMap.put(ctx.ID().getText(), "float");
         }
+
         // Añadimos el ID y el ; para terminar la traduccion
-        System.out.println(ctx.ID().getText() + ";");
+
+        if (!ctx.es_arreglo().getText().isBlank()){
+            //Si es un arreglo colocamos el tamaño
+            String tamano = ctx.es_arreglo().tamano_arreglo().getText();
+            System.out.println(ctx.ID().getText() + "[" + tamano + "];");
+        }else {
+            System.out.println(ctx.ID().getText() + ";");
+        }
     }
 
     // Traduccion de un identificador para asignacion
@@ -38,6 +47,10 @@ public class FunctionTranslate extends CoralBaseListener {
     // Traduccion de acceso a un arreglo de la forma id[x]
     @Override
     public void enterArray_access(CoralParser.Array_accessContext ctx){
+        if(!proceed){
+            proceed = true;
+            return;
+        }
         System.out.print("[");
         System.out.print(ctx.expresion_aritmetica().getText());
         System.out.print("]");
@@ -62,10 +75,10 @@ public class FunctionTranslate extends CoralBaseListener {
         String varToScan = ctx.parent.parent.getChild(0).getText();
         // Validamos en el mapa de tipos el tipo de variable para seleccionar la salida de entrada
         if (varTypeMap.get(varToScan).equals("integer")){
-            System.out.println(" coralScan.nextInt();");
+            System.out.print(" coralScan.nextInt()");
         }
         else{
-            System.out.println(" coralScan.nextFloat()");
+            System.out.print(" coralScan.nextFloat()");
         }
 
     }
@@ -74,34 +87,40 @@ public class FunctionTranslate extends CoralBaseListener {
     @Override
     public void enterAsgEntrada(CoralParser.AsgEntradaContext ctx){
         if (!ctx.entrada().getText().equals("Get next input") && !ctx.entrada().getText().equals("Getnextinput")){
-            System.out.print(ctx.ASSIGN());
+            String complement = ctx.complemento_asignacion().getText();
+            System.out.print(complement+" "+ctx.ASSIGN()+" ");
+            if(!complement.isBlank()){
+                proceed = false;
+            }
             String number = ctx.entrada().getText();
             // Si es un entero o un float si se imprime
-            try
-            {
+            try{
                 int isNumber = Integer.parseInt(number);
-                System.out.println(isNumber);
-            }
-            catch (NumberFormatException e)
-            {
-                try
-                {
+                System.out.print(isNumber);
+            }catch (NumberFormatException e){
+                try{
                     float isNumber = Float.parseFloat(number);
-                    System.out.println(isNumber);
-                }
-                catch (NumberFormatException er) {
+                    System.out.print(isNumber);
+                }catch (NumberFormatException er){
+                    /*Verificar si es una expresion aritmetica (4+i)/2
+                    *
+                    * */
+                    //System.out.print(number);
                     System.out.print("");
-
                 }
-
             }
             // System.out.print(ctx.entrada().getText());
             // System.out.print(ctx.entrada().getText());
             // System.out.println(";");
         }
         else{
-            System.out.print(ctx.ASSIGN());
+            System.out.print(" "+ctx.ASSIGN());
         }
+    }
+
+    @Override
+    public void exitAsgEntrada(CoralParser.AsgEntradaContext ctx) {
+        System.out.println(";");
     }
 
     // Traduccion salida
@@ -129,7 +148,6 @@ public class FunctionTranslate extends CoralBaseListener {
     // Traduccion de la salida de numeros o variables
     @Override
     public void enterNumberOutput(CoralParser.NumberOutputContext ctx){
-        System.out.print(ctx.expresion_aritmetica().getText());
     }
     @Override
     public void exitNumberOutput(CoralParser.NumberOutputContext ctx){
@@ -244,10 +262,6 @@ public class FunctionTranslate extends CoralBaseListener {
             if (arraySize == '?'){
                 // Se debe definir el arrayList o Array
             }
-            else{
-                // Se asigna el tamaño
-                System.out.println("["+arraySize+"]");
-            }
         }
     }
 
@@ -297,13 +311,13 @@ public class FunctionTranslate extends CoralBaseListener {
     @Override
     public void enterSqRoot(CoralParser.SqRootContext ctx){
         String sqrtNum = ctx.expresion_aritmetica().getText();
-        System.out.println("Math.sqrt(" + sqrtNum + ");");
+        System.out.print("Math.sqrt(" + sqrtNum + ")");
     }
 
     @Override
     public void enterAbsValue(CoralParser.AbsValueContext ctx){
         String absValNum = ctx.expresion_aritmetica().getText();
-        System.out.println("Math.abs(" + absValNum + ");");
+        System.out.print("Math.abs(" + absValNum + ")");
     }
 
     @Override
@@ -312,7 +326,7 @@ public class FunctionTranslate extends CoralBaseListener {
         // La idea es lograr que traduzca antes de cargar al output
         String a = ctx.expresion_aritmetica(0).getText();
         String b = ctx.expresion_aritmetica(1).getText();
-        System.out.println("Math.pow(" + a + "," + b + ");");
+        System.out.print("Math.pow(" + a + "," + b + ")");
     }
 
     @Override
@@ -325,7 +339,13 @@ public class FunctionTranslate extends CoralBaseListener {
 
     @Override
     public void enterExp_arit(CoralParser.Exp_aritContext ctx){
-        // System.out.println("XD");
+        //System.out.print(ctx.expresion_aritmetica().getText());
     }
 
+    @Override
+    public void enterId_number(CoralParser.Id_numberContext ctx) {
+        if(!ctx.ID().getText().isBlank() && !ctx.complemento_id().getText().isBlank()){
+            System.out.print(ctx.ID().getText());
+        }
+    }
 }
