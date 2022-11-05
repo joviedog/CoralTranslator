@@ -11,6 +11,7 @@ public class FunctionTranslate extends CoralBaseListener {
     Map<String, String> varTypeMap = new HashMap<String, String>();
     String varCheckType;
     Boolean proceed = true;
+    Boolean go = true;
     // Traduccion de la declaracion de una variable en el programa
     @Override
     public void enterVariable_declaration(CoralParser.Variable_declarationContext ctx){
@@ -41,14 +42,19 @@ public class FunctionTranslate extends CoralBaseListener {
     // Traduccion de un identificador para asignacion
     @Override
     public void enterId_asg(CoralParser.Id_asgContext ctx){
+        if(ctx.asignacion().getChild(0).getText().equals(".size")){
+            proceed = false;
+            return;
+        }
         System.out.print(ctx.ID());
     }
 
     // Traduccion de acceso a un arreglo de la forma id[x]
     @Override
     public void enterArray_access(CoralParser.Array_accessContext ctx){
-        if(!proceed){
+        if(!proceed || !go){
             proceed = true;
+            go = true;
             return;
         }
         System.out.print("[");
@@ -59,7 +65,7 @@ public class FunctionTranslate extends CoralBaseListener {
     // Traduccion del acceso al tamaño de un arreglo de la forma array.size
     @Override
     public void enterArray_size(CoralParser.Array_sizeContext ctx){
-        System.out.print(".size");
+        if(proceed) System.out.print(".length");
     }
 
     // Traduccion del acceso a una variable comun de la forma id
@@ -88,10 +94,9 @@ public class FunctionTranslate extends CoralBaseListener {
     public void enterAsgEntrada(CoralParser.AsgEntradaContext ctx){
         if (!ctx.entrada().getText().equals("Get next input") && !ctx.entrada().getText().equals("Getnextinput")){
             String complement = ctx.complemento_asignacion().getText();
+            if(complement.equals(".size")) return;
+            if(!complement.isBlank()) proceed = false;
             System.out.print(complement+" "+ctx.ASSIGN()+" ");
-            if(!complement.isBlank()){
-                proceed = false;
-            }
             String number = ctx.entrada().getText();
             // Si es un entero o un float si se imprime
             try{
@@ -106,7 +111,12 @@ public class FunctionTranslate extends CoralBaseListener {
                     *
                     * */
                     //System.out.print(number);
-                    System.out.print("");
+                    if(number.indexOf(".size")>=0){
+                        System.out.print(number.substring(0,number.indexOf(".size")));
+                    }else{
+                        System.out.print(number);
+                    }
+                    go = false;
                 }
             }
             // System.out.print(ctx.entrada().getText());
@@ -120,7 +130,10 @@ public class FunctionTranslate extends CoralBaseListener {
 
     @Override
     public void exitAsgEntrada(CoralParser.AsgEntradaContext ctx) {
-        System.out.println(";");
+        if(proceed){
+            System.out.println(";");
+            proceed = true;
+        }
     }
 
     // Traduccion salida
@@ -148,6 +161,8 @@ public class FunctionTranslate extends CoralBaseListener {
     // Traduccion de la salida de numeros o variables
     @Override
     public void enterNumberOutput(CoralParser.NumberOutputContext ctx){
+        System.out.print(ctx.expresion_aritmetica().getText());
+        if(ctx.expresion_aritmetica().getText().indexOf("[")>=0) go = false;
     }
     @Override
     public void exitNumberOutput(CoralParser.NumberOutputContext ctx){
@@ -239,6 +254,13 @@ public class FunctionTranslate extends CoralBaseListener {
         System.out.print(ctx.expresion_aritmetica_for(1).getText());
         System.out.println(") {");
     }
+
+    @Override
+    public void exitExpresion_aritmetica(CoralParser.Expresion_aritmeticaContext ctx) {
+        if(ctx.getText().indexOf(".size")>=0)
+            System.out.print(ctx.getText().substring(ctx.getText().indexOf(".size")+5));
+    }
+
     @Override
     public void enterExpresion_aritmetica_for(CoralParser.Expresion_aritmetica_forContext ctx){
         // Funcion para override
@@ -344,7 +366,7 @@ public class FunctionTranslate extends CoralBaseListener {
 
     @Override
     public void enterId_number(CoralParser.Id_numberContext ctx) {
-        if(!ctx.ID().getText().isBlank() && !ctx.complemento_id().getText().isBlank()){
+        if(!ctx.ID().getText().isBlank() && !ctx.complemento_id().getText().isBlank() && go){
             System.out.print(ctx.ID().getText());
         }
     }
