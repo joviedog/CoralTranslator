@@ -1,4 +1,4 @@
-// Generated from D:/Universidad/0Actual/Programming Languages/CoralTranslator/grammar\Coral.g4 by ANTLR 4.10.1
+// Generated from C:/Users/Juan/Documents/TraductorCoral/grammar\Coral.g4 by ANTLR 4.10.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -207,6 +207,12 @@ public interface CoralVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRanum(CoralParser.RanumContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoralParser#expresion_aritmetica_param}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpresion_aritmetica_param(CoralParser.Expresion_aritmetica_paramContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CoralParser#params_function_call}.
 	 * @param ctx the parse tree
@@ -458,17 +464,33 @@ public interface CoralVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitEmpty_else(CoralParser.Empty_elseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoralParser#parametros_definicion}.
+	 * Visit a parse tree produced by the {@code paramsDef}
+	 * labeled alternative in {@link CoralParser#parametros_definicion}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParametros_definicion(CoralParser.Parametros_definicionContext ctx);
+	T visitParamsDef(CoralParser.ParamsDefContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoralParser#mas_parametros_definicion}.
+	 * Visit a parse tree produced by the {@code noParams}
+	 * labeled alternative in {@link CoralParser#parametros_definicion}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMas_parametros_definicion(CoralParser.Mas_parametros_definicionContext ctx);
+	T visitNoParams(CoralParser.NoParamsContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code moreParametersDef}
+	 * labeled alternative in {@link CoralParser#mas_parametros_definicion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMoreParametersDef(CoralParser.MoreParametersDefContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code noMoreParametersDef}
+	 * labeled alternative in {@link CoralParser#mas_parametros_definicion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNoMoreParametersDef(CoralParser.NoMoreParametersDefContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CoralParser#tipo_retorno}.
 	 * @param ctx the parse tree
@@ -518,9 +540,17 @@ public interface CoralVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMas_funciones(CoralParser.Mas_funcionesContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoralParser#mas_funciones_tipo}.
+	 * Visit a parse tree produced by the {@code otraFuncion}
+	 * labeled alternative in {@link CoralParser#mas_funciones_tipo}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMas_funciones_tipo(CoralParser.Mas_funciones_tipoContext ctx);
+	T visitOtraFuncion(CoralParser.OtraFuncionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code funcionMain}
+	 * labeled alternative in {@link CoralParser#mas_funciones_tipo}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncionMain(CoralParser.FuncionMainContext ctx);
 }

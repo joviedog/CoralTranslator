@@ -1,4 +1,4 @@
-// Generated from D:/Universidad/0Actual/Programming Languages/CoralTranslator/grammar\Coral.g4 by ANTLR 4.10.1
+// Generated from C:/Users/Juan/Documents/TraductorCoral/grammar\Coral.g4 by ANTLR 4.10.1
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -227,6 +227,13 @@ public class CoralBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitRanum(CoralParser.RanumContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitExpresion_aritmetica_param(CoralParser.Expresion_aritmetica_paramContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -513,14 +520,28 @@ public class CoralBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitParametros_definicion(CoralParser.Parametros_definicionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitParamsDef(CoralParser.ParamsDefContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMas_parametros_definicion(CoralParser.Mas_parametros_definicionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitNoParams(CoralParser.NoParamsContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitMoreParametersDef(CoralParser.MoreParametersDefContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitNoMoreParametersDef(CoralParser.NoMoreParametersDefContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -583,5 +604,12 @@ public class CoralBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMas_funciones_tipo(CoralParser.Mas_funciones_tipoContext ctx) { return visitChildren(ctx); }
+	@Override public T visitOtraFuncion(CoralParser.OtraFuncionContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitFuncionMain(CoralParser.FuncionMainContext ctx) { return visitChildren(ctx); }
 }
