@@ -226,11 +226,16 @@ public class FunctionTranslate extends CoralBaseListener {
         String condBoolIf = ctx.cond_bool().getText();
         if (condBoolIf.contains(".size")){
             condBoolIf = condBoolIf.replace(".size", ".length");
-            System.out.print(condBoolIf);
         }
-        else{
-            System.out.print(ctx.cond_bool().getText());
+
+        // Ajustamos la traducción de or y and
+        if (condBoolIf.contains("or")){
+            condBoolIf = condBoolIf.replace("or", " || ");
         }
+        else if (condBoolIf.contains("and")){
+            condBoolIf = condBoolIf.replace("and", " && ");
+        }
+        System.out.print(condBoolIf);
         System.out.println(") {");
     }
 
@@ -264,12 +269,12 @@ public class FunctionTranslate extends CoralBaseListener {
 
     @Override
     public void exitFill_else(CoralParser.Fill_elseContext ctx){
-        System.out.println("}");
+        //System.out.println("}");
     }
 
     @Override
     public void enterEmpty_else(CoralParser.Empty_elseContext ctx){
-        System.out.println("}");
+        // System.out.println("}");
     }
 
     // Traduccion del ciclo while
