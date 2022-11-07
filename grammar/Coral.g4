@@ -1,7 +1,8 @@
 grammar Coral;
 
 inicio  : function | sentencias;
-function:'Function' ID OPENING_PAR parametros_definicion CLOSING_PAR 'returns' tipo_retorno at mas_funciones;
+function:'Function' ID OPENING_PAR parametros_definicion CLOSING_PAR 'returns' tipo_retorno OPENING_CB at CLOSING_CB mas_funciones_close;
+mas_funciones_close: mas_funciones;
 sentencias: id_asg |
     seedrn |
     salida |
@@ -12,11 +13,17 @@ sentencias: id_asg |
 // Reglas para sentencias
 id_asg: ID asignacion continua_programa;
 variable_declaration: tipo_dato es_arreglo ID continua_programa;
-if: 'if' cond_bool_if cuerpo_control elseif continua_programa;
-while: 'while' cond_bool_while sentencias continua_programa;
-for: 'for' ID complemento_asignacion ASSIGN expresion_aritmetica_for SEMICOLON cond_bool SEMICOLON ID complemento_asignacion ASSIGN expresion_aritmetica_for sentencias continua_programa;
+if: 'if' cond_bool_if OPENING_CB cuerpo_control CLOSING_CB elseif continua_programa_if;
+while: 'while' cond_bool_while OPENING_CB sentencias CLOSING_CB continua_programa_while;
+for: 'for' ID complemento_asignacion ASSIGN expresion_aritmetica_for SEMICOLON cond_bool_for SEMICOLON ID complemento_asignacion ASSIGN expresion_aritmetica_for OPENING_CB sentencias CLOSING_CB continua_programa_for;
 salida: 'Put' complemento_salida continua_programa;
-seedrn: 'SeedRandomNumbers' OPENING_PAR expresion_aritmetica CLOSING_PAR continua_programa;
+seedrn: 'SeedRandomNumbers' OPENING_PAR expresion_aritmetica CLOSING_PAR continua_programa_seedrn;
+
+continua_programa_if: continua_programa;
+continua_programa_for: continua_programa;
+continua_programa_while: continua_programa;
+continua_programa_seedrn: continua_programa;
+
 
 // Ajustes y alias para el for
 expresion_aritmetica_for: expresion_aritmetica;
@@ -130,9 +137,9 @@ cond_bool14: operadores_mat2 cond_bool15 cond_bool14 | /* epsilon */;
 cond_bool15: numero | OPENING_PAR cond_bool CLOSING_PAR;
 equal_operator: EQUAL | NEQ;
 compare_operator: GEQ | LEQ | LESS | GREATER;
-elseif: 'elseif' cond_bool_if cuerpo_control elseif # if_elseif|
+elseif: 'elseif' cond_bool_if OPENING_CB cuerpo_control CLOSING_CB elseif # if_elseif|
         else # if_else;
-else: 'else' cuerpo_control # fill_else |
+else: 'else' OPENING_CB cuerpo_control CLOSING_CB # fill_else |
         /* epsilon */ # empty_else;
 parametros_definicion: tipo_dato ID mas_parametros_definicion # paramsDef|
                         /* epsilon */ # noParams;
@@ -185,8 +192,8 @@ ax: 'elseif' cond_bool av ax | ay;
 ay: 'else' av | /* epsilon */;
 
 mas_funciones: 'Function' mas_funciones_tipo;
-mas_funciones_tipo: ID OPENING_PAR parametros_definicion CLOSING_PAR 'returns' tipo_retorno at mas_funciones # otraFuncion|
-                    'Main' OPENING_PAR CLOSING_PAR 'returns' 'nothing' sentencias # funcionMain;
+mas_funciones_tipo: ID OPENING_PAR parametros_definicion CLOSING_PAR 'returns' tipo_retorno OPENING_BRA at CLOSING_CB mas_funciones_close # otraFuncion|
+                    'Main' OPENING_PAR CLOSING_PAR 'returns' 'nothing' OPENING_CB sentencias CLOSING_CB # funcionMain;
 
 
 ESP : [ \t\r\n]+ -> skip ;
@@ -215,6 +222,9 @@ LEQ : '<=';
 GREATER: '>';
 GEQ: '>=';
 QUESTION_MARK: '?';
+OPENING_CB: '{';
+CLOSING_CB: '}';
 COMMENT: '// ' ~[\r\n]* -> skip;
 ID: [a-zA-Z]+('_')*([a-zA-Z]+|[0-9]+)*;
 STRING: '"' ([a-zA-Z]+|[0-9]+)*( ~["\n\r] | '\\"')* '"';
+

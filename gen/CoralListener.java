@@ -27,6 +27,16 @@ public interface CoralListener extends ParseTreeListener {
 	 */
 	void exitFunction(CoralParser.FunctionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CoralParser#mas_funciones_close}.
+	 * @param ctx the parse tree
+	 */
+	void enterMas_funciones_close(CoralParser.Mas_funciones_closeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoralParser#mas_funciones_close}.
+	 * @param ctx the parse tree
+	 */
+	void exitMas_funciones_close(CoralParser.Mas_funciones_closeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CoralParser#sentencias}.
 	 * @param ctx the parse tree
 	 */
@@ -106,6 +116,46 @@ public interface CoralListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSeedrn(CoralParser.SeedrnContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoralParser#continua_programa_if}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinua_programa_if(CoralParser.Continua_programa_ifContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoralParser#continua_programa_if}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinua_programa_if(CoralParser.Continua_programa_ifContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoralParser#continua_programa_for}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinua_programa_for(CoralParser.Continua_programa_forContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoralParser#continua_programa_for}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinua_programa_for(CoralParser.Continua_programa_forContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoralParser#continua_programa_while}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinua_programa_while(CoralParser.Continua_programa_whileContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoralParser#continua_programa_while}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinua_programa_while(CoralParser.Continua_programa_whileContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoralParser#continua_programa_seedrn}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinua_programa_seedrn(CoralParser.Continua_programa_seedrnContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoralParser#continua_programa_seedrn}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinua_programa_seedrn(CoralParser.Continua_programa_seedrnContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CoralParser#expresion_aritmetica_for}.
 	 * @param ctx the parse tree

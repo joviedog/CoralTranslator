@@ -95,7 +95,7 @@ public class FunctionTranslate extends CoralBaseListener {
     // Traduccion del acceso al tamaño de un arreglo de la forma array.size
     @Override
     public void enterArray_size(CoralParser.Array_sizeContext ctx){
-        if(proceed) System.out.print(".length");
+        // if(proceed) System.out.print(".length");
     }
 
     // Traduccion del acceso a una variable comun de la forma id
@@ -122,7 +122,6 @@ public class FunctionTranslate extends CoralBaseListener {
     // Traduccion de la asignacion de una variable a un numero
     @Override
     public void enterAsgEntrada(CoralParser.AsgEntradaContext ctx){
-
         if (!ctx.entrada().getText().equals("Get next input") && !ctx.entrada().getText().equals("Getnextinput")){
             String complement = ctx.complemento_asignacion().getText();
             if(complement.equals(".size")) return;
@@ -132,14 +131,15 @@ public class FunctionTranslate extends CoralBaseListener {
                 proceed = false;
             }
             String number = ctx.entrada().getText();
+
             // Si es un entero o un float si se imprime
             try{
                 int isNumber = Integer.parseInt(number);
-                // System.out.print(isNumber);
+                System.out.print(isNumber);
             }catch (NumberFormatException e){
                 try{
                     double isNumber = Double.parseDouble(number);
-                    // System.out.print(isNumber);
+                    System.out.print(isNumber);
                 }catch (NumberFormatException er){
                     // Verificar si es una expresion aritmetica (4+i)/2
                     //System.out.print(number);
@@ -161,10 +161,7 @@ public class FunctionTranslate extends CoralBaseListener {
 
     @Override
     public void exitAsgEntrada(CoralParser.AsgEntradaContext ctx) {
-        if(proceed){
-            System.out.println(";");
-            proceed = true;
-        }
+        System.out.println(";");
     }
 
     // Traduccion salida
@@ -225,7 +222,15 @@ public class FunctionTranslate extends CoralBaseListener {
     @Override
     public void enterCond_bool_if(CoralParser.Cond_bool_ifContext ctx){
         System.out.print("(");
-        System.out.print(ctx.cond_bool().getText());
+        // Vamos a revisar si la condicion booleana del for contiene el atributo size
+        String condBoolIf = ctx.cond_bool().getText();
+        if (condBoolIf.contains(".size")){
+            condBoolIf = condBoolIf.replace(".size", ".length");
+            System.out.print(condBoolIf);
+        }
+        else{
+            System.out.print(ctx.cond_bool().getText());
+        }
         System.out.println(") {");
     }
 
@@ -271,19 +276,33 @@ public class FunctionTranslate extends CoralBaseListener {
     @Override
     public void enterWhile(CoralParser.WhileContext ctx){
         System.out.print("while");
+
+    }
+
+    @Override
+    public void enterContinua_programa_while(CoralParser.Continua_programa_whileContext ctx){
+        System.out.println("}");
     }
 
     // Traduccion del condicional para un ciclo while
     @Override
     public void enterCond_bool_while(CoralParser.Cond_bool_whileContext ctx){
         System.out.print("(");
-        System.out.print(ctx.cond_bool().getText());
+        // Vamos a revisar si la condicion booleana del for contiene el atributo size
+        String condBoolWhile = ctx.cond_bool().getText();
+        if (condBoolWhile.contains(".size")){
+            condBoolWhile = condBoolWhile.replace(".size", ".length");
+            System.out.print(condBoolWhile);
+        }
+        else{
+            System.out.print(ctx.cond_bool().getText());
+        }
         System.out.println(") {");
     }
 
     @Override
     public void exitWhile(CoralParser.WhileContext ctx){
-        System.out.println("}");
+        // Does nothing
     }
 
     // Traduccion del ciclo for
@@ -296,7 +315,16 @@ public class FunctionTranslate extends CoralBaseListener {
         System.out.print(ctx.expresion_aritmetica_for(0).getText());
         System.out.print(ctx.SEMICOLON(0));
         // Condicion para el booleano
-        System.out.print(ctx.cond_bool().getText());
+        // Vamos a revisar si la condicion booleana del for contiene el atributo size
+        String condBoolFor = ctx.cond_bool_for().getText();
+        if (condBoolFor.contains(".size")){
+            condBoolFor = condBoolFor.replace(".size", ".length");
+            System.out.print(condBoolFor);
+        }
+        else{
+            System.out.print(ctx.cond_bool_for().getText());
+        }
+
         System.out.print(ctx.SEMICOLON(1));
         // Update del iterador
         System.out.print(ctx.ID(1));
@@ -307,6 +335,7 @@ public class FunctionTranslate extends CoralBaseListener {
 
     @Override
     public void exitExpresion_aritmetica(CoralParser.Expresion_aritmeticaContext ctx) {
+
         if(ctx.getText().indexOf(".size")>=0)
             System.out.print(ctx.getText().substring(ctx.getText().indexOf(".size")+5));
     }
@@ -318,12 +347,20 @@ public class FunctionTranslate extends CoralBaseListener {
 
     @Override
     public void enterCond_bool_for(CoralParser.Cond_bool_forContext ctx){
-        // xd
+        // Rule for skipping
+    }
+    @Override
+    public void enterContinua_programa_for(CoralParser.Continua_programa_forContext ctx){
+        System.out.println("}");
     }
 
     @Override
-    public void exitFor(CoralParser.ForContext ctx){
+    public void enterContinua_programa_if(CoralParser.Continua_programa_ifContext ctx){
         System.out.println("}");
+    }
+    @Override
+    public void exitFor(CoralParser.ForContext ctx){
+        // System.out.println("}");
     }
 
     // Definicion de un arreglo
@@ -342,13 +379,24 @@ public class FunctionTranslate extends CoralBaseListener {
     @Override
     public void enterFunction(CoralParser.FunctionContext ctx){
         System.out.print("public ");
+
         // Se define el tipo de retorno para la funcion
         // Revisamos que el retorno no sea null (Nothing)
         String functionReturnType = "";
+        boolean isArray = false;
         try{
             functionReturnType = ctx.tipo_retorno().tipo_dato().getText();
+
         } catch (Exception e){
             functionReturnType = "nothing";
+        }
+
+        try{
+            if (ctx.tipo_retorno().es_arreglo().getChild(0).getText().contains("array")){
+                isArray = true;
+            }
+        } catch (Exception notArray){
+            // Ignore
         }
 
         switch (functionReturnType) {
@@ -356,10 +404,20 @@ public class FunctionTranslate extends CoralBaseListener {
                 System.out.print("void ");
                 break;
             case "integer":
-                System.out.print("int ");
+                if (isArray){
+                    System.out.print("int []");
+                }
+                else {
+                    System.out.print("int ");
+                }
                 break;
             case "float":
-                System.out.print("double ");
+                if (isArray){
+                    System.out.print("double[] ");
+                }
+                else {
+                    System.out.print("double ");
+                }
                 break;
         }
         // Se define el ID de la funcion
@@ -367,7 +425,62 @@ public class FunctionTranslate extends CoralBaseListener {
         // Se definen los parametros de la funcion
         System.out.print(ctx.OPENING_PAR());
         // System.out.print(ctx.parametros_definicion().getText());
+        /*
+        System.out.print("public ");
+        // Se define el tipo de retorno para la funcion
+        // Revisamos que el retorno no sea null (Nothing)
+        String functionReturnType = "";
+        boolean isArray = false;
+        try{
+            functionReturnType = ctx.tipo_retorno().tipo_dato().getText();
 
+        } catch (Exception e){
+            functionReturnType = "nothing";
+        }
+
+        try{
+            if (ctx.tipo_retorno().es_arreglo().getChild(0).getText().contains("array")){
+                isArray = true;
+            }
+        } catch (Exception notArray){
+            // Ignore
+        }
+
+        switch (functionReturnType) {
+            case "nothing":
+                System.out.print("void ");
+                break;
+            case "integer":
+                if (isArray){
+                    System.out.print("int[] ");
+                }
+                else {
+                    System.out.print("int ");
+                }
+                break;
+            case "float":
+                if (isArray){
+                    System.out.print("double[] ");
+                }
+                else {
+                    System.out.print("double ");
+                }
+                break;
+        }
+        // Se define el ID de la funcion
+        System.out.print(ctx.ID().getText());
+        // Se definen los parametros de la funcion
+        System.out.print(ctx.OPENING_PAR());
+        // System.out.print(ctx.parametros_definicion().getText());
+        */
+    }
+
+    @Override
+    public void enterMas_funciones_close(CoralParser.Mas_funciones_closeContext ctx){
+        ParserRuleContext returnCtx = ctx.getParent();
+        String varReturn = returnCtx.children.get(6).getChild(2).getText();
+        System.out.println("return "+varReturn+";");
+        System.out.println("}");
     }
 
     @Override
@@ -380,9 +493,9 @@ public class FunctionTranslate extends CoralBaseListener {
             functionReturnType = "nothing";
         }
         if (!functionReturnType.equals("nothing")){
-            System.out.println("return " + ctx.tipo_retorno().ID().getText());
+            //System.out.println("return " + ctx.tipo_retorno().ID().getText());
         }
-        System.out.println("}\n");
+        // System.out.println("}\n");
     }
 
     // Traduccion de la funcion main
@@ -390,6 +503,8 @@ public class FunctionTranslate extends CoralBaseListener {
     public void enterFuncionMain(CoralParser.FuncionMainContext ctx){
         System.out.println("public void Main(){");
     }
+
+
 
     @Override
     public void exitFuncionMain(CoralParser.FuncionMainContext ctx){
@@ -510,11 +625,14 @@ public class FunctionTranslate extends CoralBaseListener {
 
     @Override
     public void enterExp_arit(CoralParser.Exp_aritContext ctx){
-        String containsBuiltIn = ctx.expresion_aritmetica().expresion_aritmetica3().expresion_aritmetica5().numero().getChild(0).getText();
-        if (containsBuiltIn.equals("SquareRoot") || containsBuiltIn.equals("AbsoluteValue") || containsBuiltIn.equals("RandomNumber") || containsBuiltIn.equals("RaiseToPower")){
-            // Does nothing
-        } else{
-            System.out.print(ctx.expresion_aritmetica().getText());
+        try {
+            String containsBuiltIn = ctx.expresion_aritmetica().expresion_aritmetica3().expresion_aritmetica5().numero().getChild(0).getText();
+            if (containsBuiltIn.equals("SquareRoot") || containsBuiltIn.equals("AbsoluteValue") || containsBuiltIn.equals("RandomNumber") || containsBuiltIn.equals("RaiseToPower")){
+                // Does nothing
+            }
+        }
+        catch (Exception noBuiltIn){
+            //System.out.println(ctx.expresion_aritmetica().getText());
         }
     }
 
@@ -523,10 +641,9 @@ public class FunctionTranslate extends CoralBaseListener {
         if(!(ctx.ID().getText() == null) && !(ctx.complemento_id().getText() == null)){
             // System.out.print(ctx.ID().getText());
         }
-
         try {
             if (ctx.complemento_id().getText().equals(".size")) {
-                System.out.print(".length");
+                // System.out.print(".length");
             }
         } catch (Exception lengthException){
             System.out.println(lengthException);

@@ -39,6 +39,18 @@ public class CoralBaseListener implements CoralListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterMas_funciones_close(CoralParser.Mas_funciones_closeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMas_funciones_close(CoralParser.Mas_funciones_closeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSentencias(CoralParser.SentenciasContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -130,6 +142,54 @@ public class CoralBaseListener implements CoralListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSeedrn(CoralParser.SeedrnContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterContinua_programa_if(CoralParser.Continua_programa_ifContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitContinua_programa_if(CoralParser.Continua_programa_ifContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterContinua_programa_for(CoralParser.Continua_programa_forContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitContinua_programa_for(CoralParser.Continua_programa_forContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterContinua_programa_while(CoralParser.Continua_programa_whileContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitContinua_programa_while(CoralParser.Continua_programa_whileContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterContinua_programa_seedrn(CoralParser.Continua_programa_seedrnContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitContinua_programa_seedrn(CoralParser.Continua_programa_seedrnContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

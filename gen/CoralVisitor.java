@@ -22,6 +22,12 @@ public interface CoralVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunction(CoralParser.FunctionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CoralParser#mas_funciones_close}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMas_funciones_close(CoralParser.Mas_funciones_closeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CoralParser#sentencias}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -69,6 +75,30 @@ public interface CoralVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSeedrn(CoralParser.SeedrnContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoralParser#continua_programa_if}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinua_programa_if(CoralParser.Continua_programa_ifContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoralParser#continua_programa_for}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinua_programa_for(CoralParser.Continua_programa_forContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoralParser#continua_programa_while}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinua_programa_while(CoralParser.Continua_programa_whileContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoralParser#continua_programa_seedrn}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinua_programa_seedrn(CoralParser.Continua_programa_seedrnContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CoralParser#expresion_aritmetica_for}.
 	 * @param ctx the parse tree
