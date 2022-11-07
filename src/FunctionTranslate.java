@@ -69,6 +69,7 @@ public class FunctionTranslate extends CoralBaseListener {
 
         if(ctx.asignacion().getChild(0).getText().equals(".size")){
             proceed = false;
+            go = true;
             return;
         }
         System.out.print(ctx.ID());
@@ -161,7 +162,7 @@ public class FunctionTranslate extends CoralBaseListener {
 
     @Override
     public void exitAsgEntrada(CoralParser.AsgEntradaContext ctx) {
-        System.out.println(";");
+        if(proceed == go) System.out.println(";");
     }
 
     // Traduccion salida
