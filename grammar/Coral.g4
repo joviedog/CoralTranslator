@@ -43,8 +43,11 @@ numero: INTEGER # integer|
     ID complemento_id # id_number|
     'SquareRoot' OPENING_PAR expresion_aritmetica CLOSING_PAR # sqRoot|
     'AbsoluteValue' OPENING_PAR expresion_aritmetica CLOSING_PAR # absValue|
-    'RaiseToPower' OPENING_PAR expresion_aritmetica COMMA expresion_aritmetica CLOSING_PAR # rtp|
-    'RandomNumber' OPENING_PAR expresion_aritmetica COMMA expresion_aritmetica CLOSING_PAR # ranum;
+    'RaiseToPower' OPENING_PAR expresion_aritmetica_param COMMA expresion_aritmetica_param CLOSING_PAR # rtp|
+    'RandomNumber' OPENING_PAR expresion_aritmetica_param COMMA expresion_aritmetica_param CLOSING_PAR # ranum;
+// Re definicion para evitar impresion doble de parametros de RTP y RANUM
+expresion_aritmetica_param: expresion_aritmetica;
+
 // Parametros para llamar una funcion
 params_function_call: expresion_aritmetica mas_params | /* epsilon */;
 mas_params: COMMA expresion_aritmetica5 mas_params | /* epsilon */;
@@ -131,8 +134,10 @@ elseif: 'elseif' cond_bool_if cuerpo_control elseif # if_elseif|
         else # if_else;
 else: 'else' cuerpo_control # fill_else |
         /* epsilon */ # empty_else;
-parametros_definicion: tipo_dato ID mas_parametros_definicion| /* epsilon */;
-mas_parametros_definicion: COMMA tipo_dato ID mas_parametros_definicion| /* epsilon */;
+parametros_definicion: tipo_dato ID mas_parametros_definicion # paramsDef|
+                        /* epsilon */ # noParams;
+mas_parametros_definicion: COMMA tipo_dato ID mas_parametros_definicion # moreParametersDef |
+                            /* epsilon */ # noMoreParametersDef;
 tipo_retorno: tipo_dato es_arreglo ID | 'nothing';
 /*
 at: ID asignacion au |
@@ -180,7 +185,9 @@ ax: 'elseif' cond_bool av ax | ay;
 ay: 'else' av | /* epsilon */;
 
 mas_funciones: 'Function' mas_funciones_tipo;
-mas_funciones_tipo: ID OPENING_PAR parametros_definicion CLOSING_PAR 'returns' tipo_retorno at mas_funciones | 'Main' OPENING_PAR CLOSING_PAR 'returns' 'nothing' sentencias;
+mas_funciones_tipo: ID OPENING_PAR parametros_definicion CLOSING_PAR 'returns' tipo_retorno at mas_funciones # otraFuncion|
+                    'Main' OPENING_PAR CLOSING_PAR 'returns' 'nothing' sentencias # funcionMain;
+
 
 ESP : [ \t\r\n]+ -> skip ;
 
@@ -208,6 +215,6 @@ LEQ : '<=';
 GREATER: '>';
 GEQ: '>=';
 QUESTION_MARK: '?';
-COMMENT: '// ' ([a-zA-Z]+|[0-9]+)*;
-ID: [a-zA-Z]+([a-zA-Z]+|[0-9]+)*;
+COMMENT: '// ' ~[\r\n]* -> skip;
+ID: [a-zA-Z]+('_')*([a-zA-Z]+|[0-9]+)*;
 STRING: '"' ([a-zA-Z]+|[0-9]+)*( ~["\n\r] | '\\"')* '"';

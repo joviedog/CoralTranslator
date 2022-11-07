@@ -20,7 +20,7 @@ public class Main {
             // Crear el objeto del analizador sintactico que se alimenta del buffer de tokens
             CoralParser parser = new CoralParser(tokens);
             ParseTree tree = parser.inicio();
-            System.out.println(tree.toStringTree(parser));
+            // System.out.println(tree.toStringTree(parser));
 
             ParseTreeWalker walker = new ParseTreeWalker();
             walker.walk(new FunctionTranslate(), tree);

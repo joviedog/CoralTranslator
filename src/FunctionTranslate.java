@@ -12,6 +12,30 @@ public class FunctionTranslate extends CoralBaseListener {
     String varCheckType;
     Boolean proceed = true;
     Boolean go = true;
+
+    // Regla inicial
+    @Override
+    public void enterInicio(CoralParser.InicioContext ctx){
+
+        // Incluimos los imports necesarios
+        System.out.println("import java.util.Random;");
+        System.out.println("import java.util.Scanner;");
+        System.out.println("import java.lang.Math;");
+        // Iniciamos sacando el boilerplate
+        System.out.println("public class Main\n" +
+                "{\n" +
+                "\tpublic static void main(String[] args) {\n" +
+                "\n" +
+                "\t    // Este scanner se declara sin importar la funcionalidad del codigo\n" +
+                "\t\tScanner coralScan = new Scanner(System.in); ");
+    }
+
+    @Override
+    public void exitInicio(CoralParser.InicioContext ctx){
+        System.out.println("\t}\n" +
+                            "}");
+    }
+
     // Traduccion de la declaracion de una variable en el programa
     @Override
     public void enterVariable_declaration(CoralParser.Variable_declarationContext ctx){
@@ -23,9 +47,9 @@ public class FunctionTranslate extends CoralBaseListener {
             // Añadimos la variable al mapa de tipos
             varTypeMap.put(ctx.ID().getText(), "integer");
         } else{
-            System.out.print("float ");
+            System.out.print("double ");
             // Añadimos la variable al mapa de tipos
-            varTypeMap.put(ctx.ID().getText(), "float");
+            varTypeMap.put(ctx.ID().getText(), "double");
         }
 
         // Añadimos el ID y el ; para terminar la traduccion
@@ -42,11 +66,17 @@ public class FunctionTranslate extends CoralBaseListener {
     // Traduccion de un identificador para asignacion
     @Override
     public void enterId_asg(CoralParser.Id_asgContext ctx){
+
         if(ctx.asignacion().getChild(0).getText().equals(".size")){
             proceed = false;
             return;
         }
         System.out.print(ctx.ID());
+    }
+
+    @Override
+    public void exitId_asg(CoralParser.Id_asgContext ctx){
+        // System.out.println(";");
     }
 
     // Traduccion de acceso a un arreglo de la forma id[x]
@@ -84,7 +114,7 @@ public class FunctionTranslate extends CoralBaseListener {
             System.out.print(" coralScan.nextInt()");
         }
         else{
-            System.out.print(" coralScan.nextFloat()");
+            System.out.print(" coralScan.nextDouble()");
         }
 
     }
@@ -92,24 +122,26 @@ public class FunctionTranslate extends CoralBaseListener {
     // Traduccion de la asignacion de una variable a un numero
     @Override
     public void enterAsgEntrada(CoralParser.AsgEntradaContext ctx){
+
         if (!ctx.entrada().getText().equals("Get next input") && !ctx.entrada().getText().equals("Getnextinput")){
             String complement = ctx.complemento_asignacion().getText();
             if(complement.equals(".size")) return;
             if(!complement.isBlank()) proceed = false;
             System.out.print(complement+" "+ctx.ASSIGN()+" ");
+            if(!(complement==null)){
+                proceed = false;
+            }
             String number = ctx.entrada().getText();
             // Si es un entero o un float si se imprime
             try{
                 int isNumber = Integer.parseInt(number);
-                System.out.print(isNumber);
+                // System.out.print(isNumber);
             }catch (NumberFormatException e){
                 try{
-                    float isNumber = Float.parseFloat(number);
-                    System.out.print(isNumber);
+                    double isNumber = Double.parseDouble(number);
+                    // System.out.print(isNumber);
                 }catch (NumberFormatException er){
-                    /*Verificar si es una expresion aritmetica (4+i)/2
-                    *
-                    * */
+                    // Verificar si es una expresion aritmetica (4+i)/2
                     //System.out.print(number);
                     if(number.indexOf(".size")>=0){
                         System.out.print(number.substring(0,number.indexOf(".size")));
@@ -117,15 +149,14 @@ public class FunctionTranslate extends CoralBaseListener {
                         System.out.print(number);
                     }
                     go = false;
+                    System.out.print("");
                 }
             }
-            // System.out.print(ctx.entrada().getText());
-            // System.out.print(ctx.entrada().getText());
-            // System.out.println(";");
         }
         else{
             System.out.print(" "+ctx.ASSIGN());
         }
+
     }
 
     @Override
@@ -140,7 +171,13 @@ public class FunctionTranslate extends CoralBaseListener {
     @Override
     public void enterSalida(CoralParser.SalidaContext ctx){
         // Aqui se corrige lo del printf para numeros
-        System.out.print("System.out.printf(");
+        try{
+            String isPrecisionOutput = ctx.complemento_salida().getChild(3).getChild(0).getText();
+            // Si es una salida de precision se ajusta en otra funcion, sino se imprime la linea normal
+        }
+        catch (Exception e) {
+            System.out.print("System.out.println(");
+        }
     }
 
     // Traduccion de la salida de una cadena de texto STRING
@@ -148,22 +185,31 @@ public class FunctionTranslate extends CoralBaseListener {
     public void enterStringOutput(CoralParser.StringOutputContext ctx){
         System.out.print(ctx.STRING());
     }
+
     @Override
     public void exitStringOutput(CoralParser.StringOutputContext ctx){
         System.out.println(");");
     }
+
     // Traduccion del numero de digitos para precisión
     @Override
     public void enterPrecisionOutput(CoralParser.PrecisionOutputContext ctx){
-        System.out.print("'%,." + ctx.expresion_aritmetica_precision().getText() + "f'");
+        RuleContext parentCtx = ctx.parent;
+        String val = parentCtx.getChild(0).getText();
+        System.out.print("System.out.printf(\"%." + ctx.expresion_aritmetica_precision().getText() + "f\", " + val);
     }
 
     // Traduccion de la salida de numeros o variables
     @Override
     public void enterNumberOutput(CoralParser.NumberOutputContext ctx){
-        System.out.print(ctx.expresion_aritmetica().getText());
-        if(ctx.expresion_aritmetica().getText().indexOf("[")>=0) go = false;
+        if (ctx.precision_salida().getChild(0) != null){
+            // Do nothing
+        } else {
+            System.out.print(ctx.expresion_aritmetica().getText());
+            if(ctx.expresion_aritmetica().getText().indexOf("[")>=0) go = false;
+        }
     }
+
     @Override
     public void exitNumberOutput(CoralParser.NumberOutputContext ctx){
         System.out.println(");");
@@ -174,8 +220,6 @@ public class FunctionTranslate extends CoralBaseListener {
     public void exitSalida(CoralParser.SalidaContext ctx){
         // System.out.println(");");
     }
-
-
 
     // Traduccion de una condicion booleana para un if
     @Override
@@ -190,6 +234,7 @@ public class FunctionTranslate extends CoralBaseListener {
     public void enterIf(CoralParser.IfContext ctx){
         System.out.print("if");
     }
+
     @Override
     public void exitIf(CoralParser.IfContext ctx){
         // System.out.println("}");
@@ -211,19 +256,23 @@ public class FunctionTranslate extends CoralBaseListener {
     public void enterFill_else(CoralParser.Fill_elseContext ctx){
         System.out.println("}\nelse {");
     }
+
     @Override
     public void exitFill_else(CoralParser.Fill_elseContext ctx){
         System.out.println("}");
     }
+
     @Override
     public void enterEmpty_else(CoralParser.Empty_elseContext ctx){
         System.out.println("}");
     }
+
     // Traduccion del ciclo while
     @Override
     public void enterWhile(CoralParser.WhileContext ctx){
         System.out.print("while");
     }
+
     // Traduccion del condicional para un ciclo while
     @Override
     public void enterCond_bool_while(CoralParser.Cond_bool_whileContext ctx){
@@ -231,6 +280,7 @@ public class FunctionTranslate extends CoralBaseListener {
         System.out.print(ctx.cond_bool().getText());
         System.out.println(") {");
     }
+
     @Override
     public void exitWhile(CoralParser.WhileContext ctx){
         System.out.println("}");
@@ -270,6 +320,7 @@ public class FunctionTranslate extends CoralBaseListener {
     public void enterCond_bool_for(CoralParser.Cond_bool_forContext ctx){
         // xd
     }
+
     @Override
     public void exitFor(CoralParser.ForContext ctx){
         System.out.println("}");
@@ -292,41 +343,131 @@ public class FunctionTranslate extends CoralBaseListener {
     public void enterFunction(CoralParser.FunctionContext ctx){
         System.out.print("public ");
         // Se define el tipo de retorno para la funcion
-        String functionReturnType = ctx.tipo_retorno().tipo_dato().getText();
-        System.out.print(functionReturnType);
+        // Revisamos que el retorno no sea null (Nothing)
+        String functionReturnType = "";
+        try{
+            functionReturnType = ctx.tipo_retorno().tipo_dato().getText();
+        } catch (Exception e){
+            functionReturnType = "nothing";
+        }
+
         switch (functionReturnType) {
-            case "nothing ":
+            case "nothing":
                 System.out.print("void ");
                 break;
-            case "integer ":
+            case "integer":
                 System.out.print("int ");
                 break;
-            case "float ":
-                System.out.println("float ");
+            case "float":
+                System.out.print("double ");
                 break;
         }
         // Se define el ID de la funcion
         System.out.print(ctx.ID().getText());
         // Se definen los parametros de la funcion
         System.out.print(ctx.OPENING_PAR());
-        System.out.print(ctx.parametros_definicion().getText());
-        System.out.print(ctx.CLOSING_PAR());
-        // Fin de la definicion
-        System.out.println("{");
+        // System.out.print(ctx.parametros_definicion().getText());
+
     }
+
     @Override
-    public void exitFunction(CoralParser.FunctionContext ctx){
+    public void exitFunction(CoralParser.FunctionContext ctx) {
+        // Si el retorno no es nothing se añade el return
+        String functionReturnType = "";
+        try{
+            functionReturnType = ctx.tipo_retorno().tipo_dato().getText();
+        } catch (Exception e){
+            functionReturnType = "nothing";
+        }
+        if (!functionReturnType.equals("nothing")){
+            System.out.println("return " + ctx.tipo_retorno().ID().getText());
+        }
         System.out.println("}\n");
     }
+
+    // Traduccion de la funcion main
+    @Override
+    public void enterFuncionMain(CoralParser.FuncionMainContext ctx){
+        System.out.println("public void Main(){");
+    }
+
+    @Override
+    public void exitFuncionMain(CoralParser.FuncionMainContext ctx){
+        System.out.println("}");
+    }
+
+    // Traduccion de mas funciones
+    @Override
+    public void enterOtraFuncion(CoralParser.OtraFuncionContext ctx){
+        System.out.print("public ");
+
+        // Se define el tipo de retorno para la funcion
+        // Revisamos que el retorno no sea null (Nothing)
+        String functionReturnType = "";
+        try{
+            functionReturnType = ctx.tipo_retorno().tipo_dato().getText();
+        } catch (Exception e){
+            functionReturnType = "nothing";
+        }
+
+        switch (functionReturnType) {
+            case "nothing":
+                System.out.print("void ");
+                break;
+            case "integer":
+                System.out.print("int ");
+                break;
+            case "float":
+                System.out.print("double ");
+                break;
+        }
+        // Se define el ID de la funcion
+        System.out.print(ctx.ID().getText());
+
+        // Se definen los parametros de la funcion
+        System.out.print(ctx.OPENING_PAR());
+
+    }
+
+    @Override
+    public void exitOtraFuncion(CoralParser.OtraFuncionContext ctx){
+        System.out.println("}");
+    }
+
+    // Parametros de la definicion de una funcion
+    @Override
+    public void enterParamsDef(CoralParser.ParamsDefContext ctx){
+        // Si no hay ningun parametero
+        System.out.print(ctx.tipo_dato().getText() + " " + ctx.ID().getText());
+    }
+
+    @Override
+    public void enterNoParams(CoralParser.NoParamsContext ctx){
+        System.out.println(") {");
+    }
+
+    @Override
+    public void enterMoreParametersDef(CoralParser.MoreParametersDefContext ctx){
+        System.out.print(", ");
+        System.out.print(ctx.tipo_dato().getText() + " " + ctx.ID().getText());
+    }
+
+    @Override
+    public void enterNoMoreParametersDef(CoralParser.NoMoreParametersDefContext ctx){
+        System.out.println(") {");
+    }
+
     // Built-In Functions
     // SeedRandomNumbers
     @Override
     public void enterSeedrn(CoralParser.SeedrnContext ctx){
-        // Determinación del seed
+        // Se ignora el seed en tanto no es posible colocar un limite inferior
+        /*
         String randomSeed = ctx.expresion_aritmetica().getText();
         // Instancia de la clase random
         System.out.println("Random r = new Random();");
         System.out.println("r.setSeed(" + randomSeed + ");");
+        */
     }
 
     // Traduccion de numeros (Incluye Builtins)
@@ -346,28 +487,51 @@ public class FunctionTranslate extends CoralBaseListener {
     public void enterRtp(CoralParser.RtpContext ctx){
         // Esta expresion aritmetica hay que cambiarla. Puede ser un alias
         // La idea es lograr que traduzca antes de cargar al output
-        String a = ctx.expresion_aritmetica(0).getText();
-        String b = ctx.expresion_aritmetica(1).getText();
-        System.out.print("Math.pow(" + a + "," + b + ")");
+        //String a = ctx.expresion_aritmetica(0).getText();
+        //String b = ctx.expresion_aritmetica(1).getText();
+        System.out.print("Math.pow("  + ","  + ")");
+    }
+
+    @Override
+    public void exitRtp(CoralParser.RtpContext ctx){
+        System.out.print(")");
     }
 
     @Override
     public void enterRanum(CoralParser.RanumContext ctx){
-        String lowerLimit = ctx.expresion_aritmetica(0).getText();
-        String upperLimit = ctx.expresion_aritmetica(1).getText();
-        System.out.print("Math.floor(Math.random()*("+upperLimit+"-"+lowerLimit+"+1)+" + lowerLimit+ ");");
+        String lowerLimit = ctx.expresion_aritmetica_param(0).getText();
+        String upperLimit = ctx.expresion_aritmetica_param(1).getText();
+        System.out.print("Math.floor(Math.random()*("+upperLimit+"-"+lowerLimit+"+1)+" + lowerLimit);
     }
-
+    @Override
+    public void exitRanum(CoralParser.RanumContext ctx){
+        System.out.println(")");
+    }
 
     @Override
     public void enterExp_arit(CoralParser.Exp_aritContext ctx){
-        //System.out.print(ctx.expresion_aritmetica().getText());
+        String containsBuiltIn = ctx.expresion_aritmetica().expresion_aritmetica3().expresion_aritmetica5().numero().getChild(0).getText();
+        if (containsBuiltIn.equals("SquareRoot") || containsBuiltIn.equals("AbsoluteValue") || containsBuiltIn.equals("RandomNumber") || containsBuiltIn.equals("RaiseToPower")){
+            // Does nothing
+        } else{
+            System.out.print(ctx.expresion_aritmetica().getText());
+        }
     }
 
     @Override
     public void enterId_number(CoralParser.Id_numberContext ctx) {
-        if(!ctx.ID().getText().isBlank() && !ctx.complemento_id().getText().isBlank() && go){
-            System.out.print(ctx.ID().getText());
+        if(!(ctx.ID().getText() == null) && !(ctx.complemento_id().getText() == null)){
+            // System.out.print(ctx.ID().getText());
+        }
+
+        try {
+            if (ctx.complemento_id().getText().equals(".size")) {
+                System.out.print(".length");
+            }
+        } catch (Exception lengthException){
+            System.out.println(lengthException);
+
         }
     }
+
 }

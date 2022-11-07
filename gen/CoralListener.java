@@ -1,4 +1,4 @@
-// Generated from D:/Universidad/0Actual/Programming Languages/CoralTranslator/grammar\Coral.g4 by ANTLR 4.10.1
+// Generated from C:/Users/Juan/Documents/TraductorCoral/grammar\Coral.g4 by ANTLR 4.10.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -340,6 +340,16 @@ public interface CoralListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitRanum(CoralParser.RanumContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoralParser#expresion_aritmetica_param}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpresion_aritmetica_param(CoralParser.Expresion_aritmetica_paramContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoralParser#expresion_aritmetica_param}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpresion_aritmetica_param(CoralParser.Expresion_aritmetica_paramContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CoralParser#params_function_call}.
 	 * @param ctx the parse tree
@@ -761,25 +771,53 @@ public interface CoralListener extends ParseTreeListener {
 	 */
 	void exitEmpty_else(CoralParser.Empty_elseContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoralParser#parametros_definicion}.
+	 * Enter a parse tree produced by the {@code paramsDef}
+	 * labeled alternative in {@link CoralParser#parametros_definicion}.
 	 * @param ctx the parse tree
 	 */
-	void enterParametros_definicion(CoralParser.Parametros_definicionContext ctx);
+	void enterParamsDef(CoralParser.ParamsDefContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoralParser#parametros_definicion}.
+	 * Exit a parse tree produced by the {@code paramsDef}
+	 * labeled alternative in {@link CoralParser#parametros_definicion}.
 	 * @param ctx the parse tree
 	 */
-	void exitParametros_definicion(CoralParser.Parametros_definicionContext ctx);
+	void exitParamsDef(CoralParser.ParamsDefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoralParser#mas_parametros_definicion}.
+	 * Enter a parse tree produced by the {@code noParams}
+	 * labeled alternative in {@link CoralParser#parametros_definicion}.
 	 * @param ctx the parse tree
 	 */
-	void enterMas_parametros_definicion(CoralParser.Mas_parametros_definicionContext ctx);
+	void enterNoParams(CoralParser.NoParamsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoralParser#mas_parametros_definicion}.
+	 * Exit a parse tree produced by the {@code noParams}
+	 * labeled alternative in {@link CoralParser#parametros_definicion}.
 	 * @param ctx the parse tree
 	 */
-	void exitMas_parametros_definicion(CoralParser.Mas_parametros_definicionContext ctx);
+	void exitNoParams(CoralParser.NoParamsContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code moreParametersDef}
+	 * labeled alternative in {@link CoralParser#mas_parametros_definicion}.
+	 * @param ctx the parse tree
+	 */
+	void enterMoreParametersDef(CoralParser.MoreParametersDefContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code moreParametersDef}
+	 * labeled alternative in {@link CoralParser#mas_parametros_definicion}.
+	 * @param ctx the parse tree
+	 */
+	void exitMoreParametersDef(CoralParser.MoreParametersDefContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code noMoreParametersDef}
+	 * labeled alternative in {@link CoralParser#mas_parametros_definicion}.
+	 * @param ctx the parse tree
+	 */
+	void enterNoMoreParametersDef(CoralParser.NoMoreParametersDefContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code noMoreParametersDef}
+	 * labeled alternative in {@link CoralParser#mas_parametros_definicion}.
+	 * @param ctx the parse tree
+	 */
+	void exitNoMoreParametersDef(CoralParser.NoMoreParametersDefContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CoralParser#tipo_retorno}.
 	 * @param ctx the parse tree
@@ -861,13 +899,27 @@ public interface CoralListener extends ParseTreeListener {
 	 */
 	void exitMas_funciones(CoralParser.Mas_funcionesContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoralParser#mas_funciones_tipo}.
+	 * Enter a parse tree produced by the {@code otraFuncion}
+	 * labeled alternative in {@link CoralParser#mas_funciones_tipo}.
 	 * @param ctx the parse tree
 	 */
-	void enterMas_funciones_tipo(CoralParser.Mas_funciones_tipoContext ctx);
+	void enterOtraFuncion(CoralParser.OtraFuncionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoralParser#mas_funciones_tipo}.
+	 * Exit a parse tree produced by the {@code otraFuncion}
+	 * labeled alternative in {@link CoralParser#mas_funciones_tipo}.
 	 * @param ctx the parse tree
 	 */
-	void exitMas_funciones_tipo(CoralParser.Mas_funciones_tipoContext ctx);
+	void exitOtraFuncion(CoralParser.OtraFuncionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code funcionMain}
+	 * labeled alternative in {@link CoralParser#mas_funciones_tipo}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncionMain(CoralParser.FuncionMainContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code funcionMain}
+	 * labeled alternative in {@link CoralParser#mas_funciones_tipo}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncionMain(CoralParser.FuncionMainContext ctx);
 }

@@ -1,4 +1,4 @@
-// Generated from D:/Universidad/0Actual/Programming Languages/CoralTranslator/grammar\Coral.g4 by ANTLR 4.10.1
+// Generated from C:/Users/Juan/Documents/TraductorCoral/grammar\Coral.g4 by ANTLR 4.10.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -382,6 +382,18 @@ public class CoralBaseListener implements CoralListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitRanum(CoralParser.RanumContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpresion_aritmetica_param(CoralParser.Expresion_aritmetica_paramContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpresion_aritmetica_param(CoralParser.Expresion_aritmetica_paramContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -867,25 +879,49 @@ public class CoralBaseListener implements CoralListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParametros_definicion(CoralParser.Parametros_definicionContext ctx) { }
+	@Override public void enterParamsDef(CoralParser.ParamsDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitParametros_definicion(CoralParser.Parametros_definicionContext ctx) { }
+	@Override public void exitParamsDef(CoralParser.ParamsDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMas_parametros_definicion(CoralParser.Mas_parametros_definicionContext ctx) { }
+	@Override public void enterNoParams(CoralParser.NoParamsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMas_parametros_definicion(CoralParser.Mas_parametros_definicionContext ctx) { }
+	@Override public void exitNoParams(CoralParser.NoParamsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMoreParametersDef(CoralParser.MoreParametersDefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMoreParametersDef(CoralParser.MoreParametersDefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNoMoreParametersDef(CoralParser.NoMoreParametersDefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNoMoreParametersDef(CoralParser.NoMoreParametersDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -987,13 +1023,25 @@ public class CoralBaseListener implements CoralListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMas_funciones_tipo(CoralParser.Mas_funciones_tipoContext ctx) { }
+	@Override public void enterOtraFuncion(CoralParser.OtraFuncionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMas_funciones_tipo(CoralParser.Mas_funciones_tipoContext ctx) { }
+	@Override public void exitOtraFuncion(CoralParser.OtraFuncionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFuncionMain(CoralParser.FuncionMainContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFuncionMain(CoralParser.FuncionMainContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
